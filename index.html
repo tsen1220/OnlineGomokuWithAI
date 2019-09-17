@@ -41,8 +41,8 @@
       var blank_size = 40;
       var blank_length = 15;
       var piece_size = 20;
-      var board_size_start = 0;
-      var board_size_finish = 600;
+      var board_size_start = 40;
+      var board_size_finish = 560;
       var turn = true;
 
       var gameBoard = [
@@ -73,15 +73,17 @@
 
         var xpos = Math.round(Math.floor(pos.x) / blank_size);
         var ypos = Math.round(Math.floor(pos.y) / blank_size);
-        if (gameBoard[xpos][ypos] == 0) {
-          if (turn) {
-            drawPiece(xpos, ypos, 1);
-            gameBoard[xpos][ypos] = 1;
-            turn = false;
-          } else {
-            drawPiece(xpos, ypos, 2);
-            gameBoard[xpos][ypos] = 2;
-            turn = true;
+        if (xpos != 0 && ypos != 0 && xpos != 15 && ypos != 15) {
+          if (gameBoard[xpos][ypos] == 0) {
+            if (turn) {
+              drawPiece(xpos, ypos, 1);
+              gameBoard[xpos][ypos] = 1;
+              turn = false;
+            } else {
+              drawPiece(xpos, ypos, 2);
+              gameBoard[xpos][ypos] = 2;
+              turn = true;
+            }
           }
         }
       });
