@@ -16,6 +16,11 @@ app.get("/", (req, res) => {
 server.listen(3000);
 
 var turn = false;
+var gameboard = [];
+var xpos = Number();
+var ypos = Number();
+var blackWin = "Black Win";
+var whiteWin = "White Win";
 
 //socket.io connect
 io.on("connection", socket => {
@@ -24,6 +29,32 @@ io.on("connection", socket => {
   });
 
   socket.on("gameBoardposition", data => {
+    gameboard = data.gameBoard;
+    xpos = data.xpos;
+    ypos = data.ypos;
     socket.broadcast.emit("gameBoardpieces", data, turn);
+
+    //橫
+    for (let i = 0; i < 5; i++) {
+      if (
+        gameboard[ypos][xpos + i - 4] == 1 &&
+        gameboard[ypos][xpos + i - 3] == 1 &&
+        gameboard[ypos][xpos + i - 2] == 1 &&
+        gameboard[ypos][xpos + i - 1] == 1 &&
+        gameboard[ypos][xpos + i] == 1
+      ) {
+        console.log(blackWin);
+        console.log(gameboard);
+      } else if (
+        gameboard[ypos][xpos + i - 4] == 2 &&
+        gameboard[ypos][xpos + i - 3] == 2 &&
+        gameboard[ypos][xpos + i - 2] == 2 &&
+        gameboard[ypos][xpos + i - 1] == 2 &&
+        gameboard[ypos][xpos + i] == 2
+      ) {
+        console.log(whiteWin);
+        console.log(gameboard);
+      }
+    }
   });
 });

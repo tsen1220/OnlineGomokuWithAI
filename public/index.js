@@ -3,32 +3,36 @@ const socket = io("http://localhost:55555");
 //game
 var board = document.getElementById("board");
 var position = document.getElementById("position");
-var blank_size = 40;
+var blank_size = 37.5;
 var blank_length = 15;
-var piece_size = 20;
-var board_size_start = 40;
-var board_size_finish = 560;
+var piece_size = 18;
+var board_size_start = 38;
+var board_size_finish = 563;
 var turn = true;
+var border_start = 0;
+var boarder_finish = 16;
 
+//17 * 17
 var gameBoard = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
-
+//click to trigger event
 board.addEventListener("click", evt => {
   cv = board;
   var pos = getMousePos(cv, evt);
@@ -38,7 +42,12 @@ board.addEventListener("click", evt => {
 
   var xpos = Math.round(Math.floor(pos.x) / blank_size);
   var ypos = Math.round(Math.floor(pos.y) / blank_size);
-  if (xpos != 0 && ypos != 0 && xpos != 15 && ypos != 15) {
+  if (
+    xpos != border_start &&
+    ypos != border_start &&
+    xpos != boarder_finish &&
+    ypos != boarder_finish
+  ) {
     if (gameBoard[ypos][xpos] == 0) {
       if (turn) {
         socket.emit("turn", turn);
@@ -64,7 +73,12 @@ board.addEventListener("click", evt => {
 //receive game data from server
 socket.on("gameBoardpieces", (data, playerturn) => {
   gameBoard = data.gameBoard;
-  if (data.xpos != 0 && data.ypos != 0 && data.xpos != 15 && data.ypos != 15) {
+  if (
+    data.xpos != border_start &&
+    data.ypos != border_start &&
+    data.xpos != boarder_finish &&
+    data.ypos != boarder_finish
+  ) {
     if (gameBoard[data.ypos][data.xpos] == 1) {
       if (playerturn == true) {
         drawPiece(data.xpos, data.ypos, 1);
@@ -89,7 +103,7 @@ function getMousePos(canvas, evt) {
 }
 
 window.onload = boardDraw();
-//Game match
+//Game Board
 function boardDraw() {
   var board = document.getElementById("board");
   var ctx = board.getContext("2d"); //Canvas Context Object
@@ -105,7 +119,7 @@ function boardDraw() {
 
   ctx.stroke();
 }
-
+// click and draw piece
 function drawPiece(cx, cy, piece) {
   var board = document.getElementById("board");
   var ctx = board.getContext("2d");
