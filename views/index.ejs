@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #gameBoard {
+        border: 1px solid #000000;
+        background: rgb(240, 176, 96);
+        z-index: 0;
+        position: absolute;
+        width: 900px;
+        height: 700px;
+        left: 15%;
+        padding: 0;
+        margin-left: 3%;
+        margin-right: 3%;
+      }
+
+      .board {
+        border: 3px solid #000000;
+        background: rgb(240, 176, 96);
+        z-index: 0;
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        left: 130px;
+        top: 40px;
+      }
+    </style>
+    <script defer src="http://localhost:55555/socket.io/socket.io.js"></script>
+    <script defer src="./index.js"></script>
+  </head>
+  <body>
+    <div id="gameBoard">
+      <div id="position">
+        X position: <br />
+        Y position:
+      </div>
+      <canvas width="600" height="600" id="board" class="board"> </canvas>
+    </div>
+  </body>
+</html>
