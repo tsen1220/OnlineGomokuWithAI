@@ -93,6 +93,15 @@ socket.on("gameBoardpieces", (data, playerturn) => {
   }
 });
 
+//gamewatch
+socket.on("blackwin", victory => {
+  victorymsg(victory);
+});
+
+socket.on("whitewin", victory => {
+  victorymsg(victory);
+});
+
 // Get position
 function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
@@ -133,4 +142,19 @@ function drawPiece(cx, cy, piece) {
   ctx.arc(blank_size * cx, blank_size * cy, piece_size, 0, Math.PI * 2, true);
   ctx.closePath();
   ctx.fill();
+}
+
+function victorymsg(msg) {
+  var c = document.getElementById("board");
+  var ctx = c.getContext("2d");
+
+  ctx.font = "100px Verdana";
+
+  var gradient = ctx.createLinearGradient(0, 0, c.width, 0);
+  gradient.addColorStop("0", "gray");
+  gradient.addColorStop("0.5", "darkblue");
+  gradient.addColorStop("1.0", "red");
+
+  ctx.fillStyle = gradient;
+  ctx.fillText(msg, 50, 300);
 }
