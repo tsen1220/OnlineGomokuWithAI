@@ -36,24 +36,99 @@ io.on("connection", socket => {
 
     //橫
     for (let i = 0; i < 5; i++) {
+      if (xpos + i - 4 >= 0) {
+        if (
+          gameboard[ypos][xpos + i - 4] == 1 &&
+          gameboard[ypos][xpos + i - 3] == 1 &&
+          gameboard[ypos][xpos + i - 2] == 1 &&
+          gameboard[ypos][xpos + i - 1] == 1 &&
+          gameboard[ypos][xpos + i] == 1
+        ) {
+          console.log(blackWin);
+        } else if (
+          gameboard[ypos][xpos + i - 4] == 2 &&
+          gameboard[ypos][xpos + i - 3] == 2 &&
+          gameboard[ypos][xpos + i - 2] == 2 &&
+          gameboard[ypos][xpos + i - 1] == 2 &&
+          gameboard[ypos][xpos + i] == 2
+        ) {
+          console.log(whiteWin);
+        }
+      }
+    }
+
+    // 直
+
+    for (let i = 0; i < 5; i++) {
+      if (ypos + i - 4 >= 0) {
+        if (
+          gameboard[ypos + i - 4][xpos] == 1 &&
+          gameboard[ypos + i - 3][xpos] == 1 &&
+          gameboard[ypos + i - 2][xpos] == 1 &&
+          gameboard[ypos + i - 1][xpos] == 1 &&
+          gameboard[ypos + i][xpos] == 1
+        ) {
+          console.log(blackWin);
+        } else if (
+          gameboard[ypos + i - 4][xpos] == 2 &&
+          gameboard[ypos + i - 3][xpos] == 2 &&
+          gameboard[ypos + i - 2][xpos] == 2 &&
+          gameboard[ypos + i - 1][xpos] == 2 &&
+          gameboard[ypos + i][xpos] == 2
+        ) {
+          console.log(whiteWin);
+        }
+      }
+    }
+
+    //負斜率
+    for (let i = 0; i < 5; i++) {
+      if (ypos + i - 4 >= 0 && xpos + i - 4 >= 0) {
+        if (
+          gameboard[ypos + i - 4][xpos + i - 4] == 1 &&
+          gameboard[ypos + i - 3][xpos + i - 3] == 1 &&
+          gameboard[ypos + i - 2][xpos + i - 2] == 1 &&
+          gameboard[ypos + i - 1][xpos + i - 1] == 1 &&
+          gameboard[ypos + i][xpos + i] == 1
+        ) {
+          console.log(blackWin);
+        } else if (
+          gameboard[ypos + i - 4][xpos + i - 4] == 2 &&
+          gameboard[ypos + i - 3][xpos + i - 3] == 2 &&
+          gameboard[ypos + i - 2][xpos + i - 2] == 2 &&
+          gameboard[ypos + i - 1][xpos + i - 1] == 2 &&
+          gameboard[ypos + i][xpos + i] == 2
+        ) {
+          console.log(whiteWin);
+        }
+      }
+    }
+
+    //正斜率
+    for (let i = 0; i < 5; i++) {
       if (
-        gameboard[ypos][xpos + i - 4] == 1 &&
-        gameboard[ypos][xpos + i - 3] == 1 &&
-        gameboard[ypos][xpos + i - 2] == 1 &&
-        gameboard[ypos][xpos + i - 1] == 1 &&
-        gameboard[ypos][xpos + i] == 1
+        ypos - i + 4 >= 0 &&
+        xpos + i - 4 >= 0 &&
+        ypos - i + 4 < gameboard.length &&
+        xpos + i - 4 < gameboard.length
       ) {
-        console.log(blackWin);
-        console.log(gameboard);
-      } else if (
-        gameboard[ypos][xpos + i - 4] == 2 &&
-        gameboard[ypos][xpos + i - 3] == 2 &&
-        gameboard[ypos][xpos + i - 2] == 2 &&
-        gameboard[ypos][xpos + i - 1] == 2 &&
-        gameboard[ypos][xpos + i] == 2
-      ) {
-        console.log(whiteWin);
-        console.log(gameboard);
+        if (
+          gameboard[ypos - i + 4][xpos + i - 4] == 1 &&
+          gameboard[ypos - i + 3][xpos + i - 3] == 1 &&
+          gameboard[ypos - i + 2][xpos + i - 2] == 1 &&
+          gameboard[ypos - i + 1][xpos + i - 1] == 1 &&
+          gameboard[ypos - i][xpos + i] == 1
+        ) {
+          console.log(blackWin);
+        } else if (
+          gameboard[ypos - i + 4][xpos + i - 4] == 2 &&
+          gameboard[ypos - i + 3][xpos + i - 3] == 2 &&
+          gameboard[ypos - i + 2][xpos + i - 2] == 2 &&
+          gameboard[ypos - i + 1][xpos + i - 1] == 2 &&
+          gameboard[ypos - i][xpos + i] == 2
+        ) {
+          console.log(whiteWin);
+        }
       }
     }
   });
