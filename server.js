@@ -21,6 +21,7 @@ var ypos = Number();
 var blackWin = "Black Win";
 var whiteWin = "White Win";
 
+const users = {};
 //socket.io connect
 io.on("connection", socket => {
   socket.on("turn", playerturn => {
@@ -138,5 +139,14 @@ io.on("connection", socket => {
         }
       }
     }
+  });
+  socket.on("msgSend", (userName, msg) => {
+    socket.broadcast.emit("sendMsg", userName, msg);
+  });
+
+  socket.on("Newuser", name => {
+    users[socket.id] = name;
+    console.log(users);
+    socket.broadcast.emit("userjoin", name);
   });
 });

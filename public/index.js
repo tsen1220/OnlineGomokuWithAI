@@ -33,6 +33,44 @@ var gameBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
+
+//room set(with chat)
+const chatbox = document.getElementById("chatbox");
+const msgInput = document.getElementById("msg-input");
+const msgContainer = document.getElementById("msg-container");
+var userName = prompt("Who are you?");
+
+while (!userName || userName == "null" || userName == "undefined") {
+  userName = prompt("This name is invalid. Please Input again! ");
+}
+socket.emit("Newuser", userName);
+
+appendMsg(`You joined`);
+
+socket.on("userjoin", name => {
+  appendMsg(`${name} join`);
+});
+
+chatbox.addEventListener("submit", evt => {
+  evt.preventDefault();
+  socket.emit("msgSend", userName, msgInput.value);
+  appendMsg("You:" + msgInput.value);
+});
+
+socket.on("sendMsg", (name, msg) => {
+  appendMsg(name + ":" + msg);
+});
+
+function appendMsg(message) {
+  var div = document.createElement("div");
+  div.width = "300px";
+  div.overflow = "hidden";
+  var textnode = document.createTextNode(message);
+  div.appendChild(textnode);
+  msgContainer.appendChild(div);
+  msgInput.value = " ";
+}
+
 //click to trigger event
 board.addEventListener(
   "click",
@@ -105,11 +143,13 @@ socket.on("gameBoardpieces", (data, playerturn) => {
 //gamewatch
 socket.on("blackwin", victory => {
   victorymsg(victory);
+  appendMsg(victory);
   watchingGame = true;
 });
 
 socket.on("whitewin", victory => {
   victorymsg(victory);
+  appendMsg(victory);
   watchingGame = true;
 });
 
