@@ -38,14 +38,16 @@ var gameBoard = [
 const chatbox = document.getElementById("chatbox");
 const msgInput = document.getElementById("msg-input");
 const msgContainer = document.getElementById("msg-container");
-var userName = prompt("Who are you?");
+if (chatbox !== null) {
+  var userName = prompt("Who are you?");
 
-while (!userName || userName == "null" || userName == "undefined") {
-  userName = prompt("This name is invalid. Please Input again! ");
+  while (!userName || userName == "null" || userName == "undefined") {
+    userName = prompt("This name is invalid. Please Input again! ");
+  }
+  socket.emit("Newuser", { roomName: roomName, userName: userName });
+
+  appendMsg(`You joined`);
 }
-socket.emit("Newuser", userName);
-
-appendMsg(`You joined`);
 
 socket.on("userjoin", name => {
   appendMsg(`${name} join`);
@@ -53,12 +55,20 @@ socket.on("userjoin", name => {
 
 chatbox.addEventListener("submit", evt => {
   evt.preventDefault();
-  socket.emit("msgSend", userName, msgInput.value);
+  socket.emit("msgSend", {
+    roomName: roomName,
+    userName: userName,
+    msg: msgInput.value
+  });
   appendMsg("You:" + msgInput.value);
 });
 
 socket.on("sendMsg", (name, msg) => {
   appendMsg(name + ":" + msg);
+});
+
+socket.on("disconnected", msg => {
+  appendMsg(msg);
 });
 
 function appendMsg(message) {
@@ -110,7 +120,8 @@ board.addEventListener(
       socket.emit("gameBoardposition", {
         gameBoard: gameBoard,
         xpos: xpos,
-        ypos: ypos
+        ypos: ypos,
+        roomName: roomName
       });
     }
   },

@@ -9,8 +9,23 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+const rooms = {};
+
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("room", { rooms: rooms });
+});
+
+app.post("/room", (req, res) => {
+  if (rooms[req.body.room] !== null) {
+    rooms[req.body.room] = { users: {} };
+    res.redirect(req.body.room);
+  } else {
+    res.redirect("/");
+  }
+});
+
+app.get("/:room", (req, res) => {
+  res.render("index", { roomName: req.params.room });
 });
 
 server.listen(3000);
@@ -21,7 +36,6 @@ var ypos = Number();
 var blackWin = "Black Win";
 var whiteWin = "White Win";
 
-const users = {};
 //socket.io connect
 io.on("connection", socket => {
   socket.on("turn", playerturn => {
@@ -32,7 +46,7 @@ io.on("connection", socket => {
     gameboard = data.gameBoard;
     xpos = data.xpos;
     ypos = data.ypos;
-    socket.broadcast.emit("gameBoardpieces", data, turn);
+    socket.to(data.roomName).broadcast.emit("gameBoardpieces", data, turn);
 
     //橫
     for (let i = 0; i < 5; i++) {
@@ -45,7 +59,7 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i] == 1
         ) {
           socket.emit("blackwin", blackWin);
-          socket.broadcast.emit("blackwin", blackWin);
+          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
         } else if (
           gameboard[ypos][xpos + i - 4] == 2 &&
           gameboard[ypos][xpos + i - 3] == 2 &&
@@ -54,7 +68,7 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i] == 2
         ) {
           socket.emit("whitewin", whiteWin);
-          socket.broadcast.emit("whitewin", whiteWin);
+          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
         }
       }
     }
@@ -71,7 +85,7 @@ io.on("connection", socket => {
           gameboard[ypos + i][xpos] == 1
         ) {
           socket.emit("blackwin", blackWin);
-          socket.broadcast.emit("blackwin", blackWin);
+          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
         } else if (
           gameboard[ypos + i - 4][xpos] == 2 &&
           gameboard[ypos + i - 3][xpos] == 2 &&
@@ -80,7 +94,7 @@ io.on("connection", socket => {
           gameboard[ypos + i][xpos] == 2
         ) {
           socket.emit("whitewin", whiteWin);
-          socket.broadcast.emit("whitewin", whiteWin);
+          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
         }
       }
     }
@@ -96,7 +110,7 @@ io.on("connection", socket => {
           gameboard[ypos + i][xpos + i] == 1
         ) {
           socket.emit("blackwin", blackWin);
-          socket.broadcast.emit("blackwin", blackWin);
+          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
         } else if (
           gameboard[ypos + i - 4][xpos + i - 4] == 2 &&
           gameboard[ypos + i - 3][xpos + i - 3] == 2 &&
@@ -105,7 +119,7 @@ io.on("connection", socket => {
           gameboard[ypos + i][xpos + i] == 2
         ) {
           socket.emit("whitewin", whiteWin);
-          socket.broadcast.emit("whitewin", whiteWin);
+          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
         }
       }
     }
@@ -126,7 +140,7 @@ io.on("connection", socket => {
           gameboard[ypos - i][xpos + i] == 1
         ) {
           socket.emit("blackwin", blackWin);
-          socket.broadcast.emit("blackwin", blackWin);
+          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
         } else if (
           gameboard[ypos - i + 4][xpos + i - 4] == 2 &&
           gameboard[ypos - i + 3][xpos + i - 3] == 2 &&
@@ -135,18 +149,39 @@ io.on("connection", socket => {
           gameboard[ypos - i][xpos + i] == 2
         ) {
           socket.emit("whitewin", whiteWin);
-          socket.broadcast.emit("whitewin", whiteWin);
+          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
         }
       }
     }
   });
-  socket.on("msgSend", (userName, msg) => {
-    socket.broadcast.emit("sendMsg", userName, msg);
+  socket.on("msgSend", obj => {
+    socket.to(obj.roomName).broadcast.emit("sendMsg", obj.userName, obj.msg);
   });
 
-  socket.on("Newuser", name => {
-    users[socket.id] = name;
-    console.log(users);
-    socket.broadcast.emit("userjoin", name);
+  socket.on("Newuser", obj => {
+    socket.join(obj.roomName);
+    rooms[obj.roomName].users[socket.id] = obj.roomName;
+    socket.to(obj.roomName).broadcast.emit("userjoin", obj.userName);
+  });
+
+  socket.on("disconnect", () => {
+    getuserRooms(socket).forEach(room => {
+      socket
+        .to(room)
+        .broadcast.emit(
+          "disconnected",
+          `${rooms[room].users[socket.id]} disconnected`
+        );
+      delete rooms[room].users[socket.id];
+    });
   });
 });
+
+function getuserRooms(socket) {
+  return Object.entries(rooms).reduce((names, [name, room]) => {
+    if (room.users[socket.id] != null) {
+      names.push(name);
+    }
+    return names;
+  }, []);
+}
