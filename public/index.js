@@ -67,6 +67,11 @@ socket.on("sendMsg", (name, msg) => {
   appendMsg(name + ":" + msg);
 });
 
+socket.on("fullroom", url => {
+  alert("This room is full!!");
+  window.location.href = url;
+});
+
 socket.on("disconnected", msg => {
   appendMsg(msg);
 });

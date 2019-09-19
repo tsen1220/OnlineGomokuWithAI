@@ -162,6 +162,9 @@ io.on("connection", socket => {
     socket.join(obj.roomName);
     rooms[obj.roomName].users[socket.id] = obj.roomName;
     socket.to(obj.roomName).broadcast.emit("userjoin", obj.userName);
+    if (Object.keys(rooms[obj.roomName].users).length > 2) {
+      socket.emit("fullroom", "/");
+    }
   });
 
   socket.on("disconnect", () => {
