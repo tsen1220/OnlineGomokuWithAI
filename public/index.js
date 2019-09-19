@@ -1,6 +1,6 @@
 const socket = io("http://localhost:55555");
 
-//game
+//game set var
 var board = document.getElementById("board");
 var position = document.getElementById("position");
 var blank_size = 37.5;
@@ -11,6 +11,7 @@ var board_size_finish = 563;
 var turn = true;
 var border_start = 0;
 var boarder_finish = 16;
+var watchingGame = false;
 
 //17 * 17
 var gameBoard = [
@@ -33,42 +34,50 @@ var gameBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 //click to trigger event
-board.addEventListener("click", evt => {
-  cv = board;
-  var pos = getMousePos(cv, evt);
-  position.innerHTML = `X position: ${Math.floor(
-    pos.x
-  )} <br/>  Y position: ${Math.floor(pos.y)}`;
+board.addEventListener(
+  "click",
+  evt => {
+    if (watchingGame) {
+      return;
+    } else {
+      cv = board;
+      var pos = getMousePos(cv, evt);
+      position.innerHTML = `X position: ${Math.floor(
+        pos.x
+      )} <br/>  Y position: ${Math.floor(pos.y)}`;
 
-  var xpos = Math.round(Math.floor(pos.x) / blank_size);
-  var ypos = Math.round(Math.floor(pos.y) / blank_size);
-  if (
-    xpos != border_start &&
-    ypos != border_start &&
-    xpos != boarder_finish &&
-    ypos != boarder_finish
-  ) {
-    if (gameBoard[ypos][xpos] == 0) {
-      if (turn) {
-        socket.emit("turn", turn);
-        drawPiece(xpos, ypos, 1);
-        gameBoard[ypos][xpos] = 1;
-        turn = false;
-      } else {
-        socket.emit("turn", turn);
-        drawPiece(xpos, ypos, 2);
-        gameBoard[ypos][xpos] = 2;
-        turn = true;
+      var xpos = Math.round(Math.floor(pos.x) / blank_size);
+      var ypos = Math.round(Math.floor(pos.y) / blank_size);
+      if (
+        xpos != border_start &&
+        ypos != border_start &&
+        xpos != boarder_finish &&
+        ypos != boarder_finish
+      ) {
+        if (gameBoard[ypos][xpos] == 0) {
+          if (turn) {
+            socket.emit("turn", turn);
+            drawPiece(xpos, ypos, 1);
+            gameBoard[ypos][xpos] = 1;
+            turn = false;
+          } else {
+            socket.emit("turn", turn);
+            drawPiece(xpos, ypos, 2);
+            gameBoard[ypos][xpos] = 2;
+            turn = true;
+          }
+        }
       }
-    }
-  }
 
-  socket.emit("gameBoardposition", {
-    gameBoard: gameBoard,
-    xpos: xpos,
-    ypos: ypos
-  });
-});
+      socket.emit("gameBoardposition", {
+        gameBoard: gameBoard,
+        xpos: xpos,
+        ypos: ypos
+      });
+    }
+  },
+  false
+);
 
 //receive game data from server
 socket.on("gameBoardpieces", (data, playerturn) => {
@@ -96,10 +105,12 @@ socket.on("gameBoardpieces", (data, playerturn) => {
 //gamewatch
 socket.on("blackwin", victory => {
   victorymsg(victory);
+  watchingGame = true;
 });
 
 socket.on("whitewin", victory => {
   victorymsg(victory);
+  watchingGame = true;
 });
 
 // Get position

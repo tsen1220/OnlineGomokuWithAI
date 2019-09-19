@@ -14,7 +14,6 @@ app.get("/", (req, res) => {
 });
 
 server.listen(3000);
-
 var turn = false;
 var gameboard = [];
 var xpos = Number();
@@ -44,7 +43,6 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i - 1] == 1 &&
           gameboard[ypos][xpos + i] == 1
         ) {
-          console.log(blackWin);
           socket.emit("blackwin", blackWin);
           socket.broadcast.emit("blackwin", blackWin);
         } else if (
@@ -54,7 +52,6 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i - 1] == 2 &&
           gameboard[ypos][xpos + i] == 2
         ) {
-          console.log(whiteWin);
           socket.emit("whitewin", whiteWin);
           socket.broadcast.emit("whitewin", whiteWin);
         }
@@ -72,7 +69,6 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos] == 1 &&
           gameboard[ypos + i][xpos] == 1
         ) {
-          console.log(blackWin);
           socket.emit("blackwin", blackWin);
           socket.broadcast.emit("blackwin", blackWin);
         } else if (
@@ -82,7 +78,6 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos] == 2 &&
           gameboard[ypos + i][xpos] == 2
         ) {
-          console.log(whiteWin);
           socket.emit("whitewin", whiteWin);
           socket.broadcast.emit("whitewin", whiteWin);
         }
@@ -99,7 +94,6 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos + i - 1] == 1 &&
           gameboard[ypos + i][xpos + i] == 1
         ) {
-          console.log(blackWin);
           socket.emit("blackwin", blackWin);
           socket.broadcast.emit("blackwin", blackWin);
         } else if (
@@ -109,7 +103,6 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos + i - 1] == 2 &&
           gameboard[ypos + i][xpos + i] == 2
         ) {
-          console.log(whiteWin);
           socket.emit("whitewin", whiteWin);
           socket.broadcast.emit("whitewin", whiteWin);
         }
@@ -131,7 +124,6 @@ io.on("connection", socket => {
           gameboard[ypos - i + 1][xpos + i - 1] == 1 &&
           gameboard[ypos - i][xpos + i] == 1
         ) {
-          console.log(blackWin);
           socket.emit("blackwin", blackWin);
           socket.broadcast.emit("blackwin", blackWin);
         } else if (
@@ -141,7 +133,6 @@ io.on("connection", socket => {
           gameboard[ypos - i + 1][xpos + i - 1] == 2 &&
           gameboard[ypos - i][xpos + i] == 2
         ) {
-          console.log(whiteWin);
           socket.emit("whitewin", whiteWin);
           socket.broadcast.emit("whitewin", whiteWin);
         }
