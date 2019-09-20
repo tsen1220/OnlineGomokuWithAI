@@ -25,7 +25,11 @@ app.post("/room", (req, res) => {
 });
 
 app.get("/:room", (req, res) => {
-  res.render("index", { roomName: req.params.room });
+  if (rooms[req.params.room] == null) {
+    res.redirect("/");
+  } else {
+    res.render("index", { roomName: req.params.room });
+  }
 });
 
 server.listen(3000);
@@ -35,11 +39,22 @@ var xpos = Number();
 var ypos = Number();
 var blackWin = "Black Win";
 var whiteWin = "White Win";
+var boolean = true;
+var gameStop = true;
+var waitmessage = "請等待玩家進房";
+var startMsg = "遊戲開始";
 
 //socket.io connect
 io.on("connection", socket => {
-  socket.on("turn", playerturn => {
+  socket.on("turn", (room, playerturn) => {
     turn = playerturn;
+    boolean = true;
+    socket.emit("watchGame", boolean);
+    socket.to(room).broadcast.emit("watchGame", !boolean);
+  });
+
+  socket.on("reset", data => {
+    gameboard = data;
   });
 
   socket.on("gameBoardposition", data => {
@@ -58,8 +73,10 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i - 1] == 1 &&
           gameboard[ypos][xpos + i] == 1
         ) {
-          socket.emit("blackwin", blackWin);
-          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
+          socket.emit("blackwin", blackWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("blackwin", blackWin, !boolean);
         } else if (
           gameboard[ypos][xpos + i - 4] == 2 &&
           gameboard[ypos][xpos + i - 3] == 2 &&
@@ -67,8 +84,10 @@ io.on("connection", socket => {
           gameboard[ypos][xpos + i - 1] == 2 &&
           gameboard[ypos][xpos + i] == 2
         ) {
-          socket.emit("whitewin", whiteWin);
-          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
+          socket.emit("whitewin", whiteWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("whitewin", whiteWin, !boolean);
         }
       }
     }
@@ -84,8 +103,10 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos] == 1 &&
           gameboard[ypos + i][xpos] == 1
         ) {
-          socket.emit("blackwin", blackWin);
-          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
+          socket.emit("blackwin", blackWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("blackwin", blackWin, !boolean);
         } else if (
           gameboard[ypos + i - 4][xpos] == 2 &&
           gameboard[ypos + i - 3][xpos] == 2 &&
@@ -93,8 +114,10 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos] == 2 &&
           gameboard[ypos + i][xpos] == 2
         ) {
-          socket.emit("whitewin", whiteWin);
-          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
+          socket.emit("whitewin", whiteWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("whitewin", whiteWin, !boolean);
         }
       }
     }
@@ -109,8 +132,10 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos + i - 1] == 1 &&
           gameboard[ypos + i][xpos + i] == 1
         ) {
-          socket.emit("blackwin", blackWin);
-          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
+          socket.emit("blackwin", blackWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("blackwin", blackWin, !boolean);
         } else if (
           gameboard[ypos + i - 4][xpos + i - 4] == 2 &&
           gameboard[ypos + i - 3][xpos + i - 3] == 2 &&
@@ -118,8 +143,10 @@ io.on("connection", socket => {
           gameboard[ypos + i - 1][xpos + i - 1] == 2 &&
           gameboard[ypos + i][xpos + i] == 2
         ) {
-          socket.emit("whitewin", whiteWin);
-          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
+          socket.emit("whitewin", whiteWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("whitewin", whiteWin, !boolean);
         }
       }
     }
@@ -139,8 +166,10 @@ io.on("connection", socket => {
           gameboard[ypos - i + 1][xpos + i - 1] == 1 &&
           gameboard[ypos - i][xpos + i] == 1
         ) {
-          socket.emit("blackwin", blackWin);
-          socket.to(data.roomName).broadcast.emit("blackwin", blackWin);
+          socket.emit("blackwin", blackWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("blackwin", blackWin, !boolean);
         } else if (
           gameboard[ypos - i + 4][xpos + i - 4] == 2 &&
           gameboard[ypos - i + 3][xpos + i - 3] == 2 &&
@@ -148,8 +177,10 @@ io.on("connection", socket => {
           gameboard[ypos - i + 1][xpos + i - 1] == 2 &&
           gameboard[ypos - i][xpos + i] == 2
         ) {
-          socket.emit("whitewin", whiteWin);
-          socket.to(data.roomName).broadcast.emit("whitewin", whiteWin);
+          socket.emit("whitewin", whiteWin, boolean);
+          socket
+            .to(data.roomName)
+            .broadcast.emit("whitewin", whiteWin, !boolean);
         }
       }
     }
@@ -162,6 +193,13 @@ io.on("connection", socket => {
     socket.join(obj.roomName);
     rooms[obj.roomName].users[socket.id] = obj.roomName;
     socket.to(obj.roomName).broadcast.emit("userjoin", obj.userName);
+    if (Object.keys(rooms[obj.roomName].users).length == 1) {
+      socket.emit("waiting", waitmessage);
+    }
+    if (Object.keys(rooms[obj.roomName].users).length == 2) {
+      socket.emit("startMsg", startMsg);
+      socket.emit("gameCanStart", !gameStop);
+    }
     if (Object.keys(rooms[obj.roomName].users).length > 2) {
       socket.emit("fullroom", "/");
     }

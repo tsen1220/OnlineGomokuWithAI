@@ -11,8 +11,10 @@ var board_size_finish = 563;
 var turn = true;
 var border_start = 0;
 var boarder_finish = 16;
-var watchingGame = false;
-
+var watchingGame = true;
+var resetmessage = "5秒後重設棋盤";
+var restartmsg = "輸方先下";
+var startMsg = "遊戲開始";
 //17 * 17
 var gameBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -47,10 +49,19 @@ if (chatbox !== null) {
   socket.emit("Newuser", { roomName: roomName, userName: userName });
 
   appendMsg(`You joined`);
+  socket.on("waiting", waitmessage => {
+    appendMsg(waitmessage);
+  });
+  socket.on("startMsg", msg => {
+    appendMsg(msg);
+    appendMsg("You 先攻 為黑方");
+  });
 }
 
 socket.on("userjoin", name => {
   appendMsg(`${name} join`);
+  appendMsg(startMsg);
+  appendMsg(`${name} 先攻 為黑方`);
 });
 
 chatbox.addEventListener("submit", evt => {
@@ -87,6 +98,16 @@ function appendMsg(message) {
 }
 
 //click to trigger event
+
+socket.on("gameCanStart", gameStart => {
+  watchingGame = gameStart;
+});
+
+//賽局控制
+socket.on("watchGame", watch => {
+  watchingGame = watch;
+});
+
 board.addEventListener(
   "click",
   evt => {
@@ -109,12 +130,12 @@ board.addEventListener(
       ) {
         if (gameBoard[ypos][xpos] == 0) {
           if (turn) {
-            socket.emit("turn", turn);
+            socket.emit("turn", roomName, turn);
             drawPiece(xpos, ypos, 1);
             gameBoard[ypos][xpos] = 1;
             turn = false;
           } else {
-            socket.emit("turn", turn);
+            socket.emit("turn", roomName, turn);
             drawPiece(xpos, ypos, 2);
             gameBoard[ypos][xpos] = 2;
             turn = true;
@@ -157,16 +178,30 @@ socket.on("gameBoardpieces", (data, playerturn) => {
 });
 
 //gamewatch
-socket.on("blackwin", victory => {
+socket.on("blackwin", (victory, gameControll) => {
   victorymsg(victory);
   appendMsg(victory);
+  appendMsg(resetmessage);
   watchingGame = true;
+  setTimeout(() => {
+    cleanBoard();
+    boardDraw();
+    appendMsg(restartmsg);
+    watchingGame = gameControll;
+  }, 5000);
 });
 
-socket.on("whitewin", victory => {
+socket.on("whitewin", (victory, gameControll) => {
   victorymsg(victory);
   appendMsg(victory);
+  appendMsg(resetmessage);
   watchingGame = true;
+  setTimeout(() => {
+    cleanBoard();
+    boardDraw();
+    appendMsg(restartmsg);
+    watchingGame = gameControll;
+  }, 5000);
 });
 
 // Get position
@@ -204,7 +239,6 @@ function drawPiece(cx, cy, piece) {
   } else if (piece == 2) {
     ctx.fillStyle = "white";
   }
-
   ctx.beginPath();
   ctx.arc(blank_size * cx, blank_size * cy, piece_size, 0, Math.PI * 2, true);
   ctx.closePath();
@@ -224,4 +258,19 @@ function victorymsg(msg) {
 
   ctx.fillStyle = gradient;
   ctx.fillText(msg, 50, 300);
+}
+
+function cleanBoard() {
+  //盤重畫
+  var board = document.getElementById("board");
+  var ctx = board.getContext("2d");
+  board.height = board.height;
+  //盤重設
+  for (let i = 0; i < 17; i++) {
+    for (let j = 0; j < 17; j++) {
+      gameBoard[i][j] = 0;
+    }
+  }
+
+  socket.emit("reset", gameBoard);
 }
