@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/room", (req, res) => {
-  if (rooms[req.body.room] !== null) {
+  if (rooms[req.body.room] == null) {
     rooms[req.body.room] = { users: {} };
     res.redirect(req.body.room);
   } else {
