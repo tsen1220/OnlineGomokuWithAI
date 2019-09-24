@@ -15,6 +15,7 @@ var watchingGame = true;
 var resetmessage = "5秒後重設棋盤";
 var restartmsg = "輸方先下";
 var startMsg = "遊戲開始";
+var disconnectedresetmsg = "有玩家離線，於五秒後重置棋盤，請重新等待新玩家";
 //17 * 17
 var gameBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -85,6 +86,13 @@ socket.on("fullroom", url => {
 
 socket.on("disconnected", msg => {
   appendMsg(msg);
+  appendMsg(disconnectedresetmsg);
+  setTimeout(() => {
+    cleanBoard();
+    boardDraw();
+    watchingGame = true;
+    turn = true;
+  }, 5000);
 });
 
 function appendMsg(message) {
