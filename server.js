@@ -3,8 +3,6 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.Server(app);
-const Score = require("./Score");
-const convolve = require("./convolve");
 const alphabeta = require("./alphabeta");
 
 app.set("views", "./views");
@@ -223,6 +221,42 @@ io.on("connection", socket => {
         );
       delete rooms[room].users[socket.id];
     });
+  });
+
+  socket.on("aireq", data => {
+    gameBoard = data.gameBoard;
+    turn = data.turn;
+    var count = 0;
+
+    if (turn === false) {
+      if (count < 3) {
+        var step = alphabeta.steptackle(
+          data.gameBoard,
+          alphabeta.filter,
+          -Infinity,
+          Infinity,
+          2,
+          2
+        )[1];
+        console.log(data.gameBoard);
+        console.log(step);
+        socket.emit("aires", step);
+        count++;
+      } else {
+        var step = alphabeta.steptackle(
+          data.gameBoard,
+          alphabeta.filter,
+          -Infinity,
+          Infinity,
+          2,
+          2
+        )[0];
+        console.log(data.gameBoard);
+        console.log(step);
+        socket.emit("aires", step);
+        count++;
+      }
+    }
   });
 });
 

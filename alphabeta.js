@@ -9,7 +9,7 @@ var board = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -72,14 +72,15 @@ function minimax(board, convolveBoard, alpha, beta, depth, player) {
     for (let [i, child] of childList.entries()) {
       var vals = minimax(child, convolveBoard, alpha, beta, depth - 1, 2);
 
-      var bestTest = Math.max(vals[0], bestValue);
-      alpha = Math.max(alpha, bestTest);
-      if (alpha >= beta) {
-        break;
-      }
+      // var bestTest = Math.max(vals[0], bestValue);
+
       if (vals[0] > bestValue) {
         bestValue = vals[0];
         bestSteps = stepList.slice(i, i + 1) + ";" + vals[1];
+        alpha = Math.max(alpha, vals[0]);
+        if (alpha >= beta) {
+          break;
+        }
       }
     }
 
@@ -89,14 +90,15 @@ function minimax(board, convolveBoard, alpha, beta, depth, player) {
     var bestSteps = [];
     for (let [i, child] of childList.entries()) {
       var vals = minimax(child, convolveBoard, alpha, beta, depth - 1, 1);
-      var bestTest = Math.min(vals[0], bestValue);
-      beta = Math.min(beta, bestTest);
-      if (alpha >= beta) {
-        break;
-      }
+      // var bestTest = Math.min(vals[0], bestValue);
+
       if (vals[0] < bestValue) {
         bestValue = vals[0];
         bestSteps = stepList.slice(i, i + 1) + ";" + vals[1];
+        beta = Math.min(beta, vals[0]);
+        if (alpha >= beta) {
+          break;
+        }
       }
     }
     return [bestValue, bestSteps];
@@ -129,4 +131,9 @@ function copy(Arr) {
   return list;
 }
 
-module.exports = { copy: copy, minimax: minimax, steptackle: steptackle };
+module.exports = {
+  copy: copy,
+  minimax: minimax,
+  steptackle: steptackle,
+  filter: arr
+};

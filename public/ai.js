@@ -89,14 +89,26 @@ board.addEventListener(
             drawPiece(xpos, ypos, 1);
             gameBoard[ypos][xpos] = 1;
             turn = false;
+            watchingGame = true;
           } else {
-            drawPiece(xpos, ypos, 2);
+            drawPiece(ypos, xpos, 2);
             gameBoard[ypos][xpos] = 2;
             turn = true;
+            watchingGame = true;
           }
         }
       }
     }
+    socket.emit("aireq", {
+      gameBoard: gameBoard,
+      turn: turn
+    });
+    socket.on("aires", data => {
+      drawPiece(data[1], data[0], 2);
+      gameBoard[data[0]][data[1]] = 2;
+      turn = true;
+      watchingGame = false;
+    });
   },
   false
 );
