@@ -229,7 +229,7 @@ io.on("connection", socket => {
     var count = 0;
 
     if (turn === false) {
-      if (count < 3) {
+      if (count < 5) {
         var step = alphabeta.steptackle(
           data.gameBoard,
           alphabeta.filter,

@@ -2,7 +2,7 @@ function Range(i, j) {
   return i >= 0 && i < 17 && j >= 0 && j < 17;
 }
 
-function oneScore(board, ypos, xpos, player) {
+function oneScore(board, ypos, xpos, player, player2) {
   // # 5 500000
   // # 4 1000
   // # 3 500
@@ -10,21 +10,21 @@ function oneScore(board, ypos, xpos, player) {
   // # 1 10
   var award = [
     10,
-    100,
-    500,
-    2000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000,
-    500000
+    1000,
+    20000,
+    50000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000,
+    100000
   ];
   var count_direction = [[1, 1], [1, 0], [1, -1], [0, 1]];
   var count_container = [];
