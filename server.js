@@ -3,6 +3,9 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.Server(app);
+const Score = require("./Score");
+const convolve = require("./convolve");
+const alphabeta = require("./alphabeta");
 
 app.set("views", "./views");
 app.set("view engine", "ejs");
@@ -13,6 +16,10 @@ const rooms = {};
 
 app.get("/", (req, res) => {
   res.render("room", { rooms: rooms });
+});
+
+app.get("/ai", (req, res) => {
+  res.render("ai");
 });
 
 app.post("/room", (req, res) => {
@@ -33,6 +40,7 @@ app.get("/:room", (req, res) => {
 });
 
 server.listen(3000);
+//遊戲參數
 var turn = false;
 var gameboard = [];
 var xpos = Number();

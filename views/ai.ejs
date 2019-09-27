@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <title>線上五子棋</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=PT+Sans&display=swap");
+      #gameBoard {
+        border: 1px solid #000000;
+        background: rgb(240, 176, 96);
+        z-index: 0;
+        position: absolute;
+        width: 900px;
+        height: 650px;
+        left: 50px;
+        padding: 0;
+        margin-left: 27px;
+        margin-right: 27px;
+      }
+
+      .board {
+        border: 3px solid #000000;
+        background: rgb(240, 176, 96);
+        z-index: 0;
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        left: 130px;
+        top: 30px;
+      }
+      #chatbox {
+        position: absolute;
+        display: block;
+        left: 1000px;
+        border: 2px solid black;
+        border-radius: 3px;
+        width: 400px;
+      }
+      #msg-input {
+        position: absolute;
+        bottom: 8px;
+        left: 3px;
+        width: 320px;
+      }
+      #msg-button {
+        position: absolute;
+        bottom: 4px;
+        right: 1px;
+      }
+      #msg-container {
+        width: 380px;
+        height: 650px;
+        overflow: scroll;
+        word-wrap: break-word;
+        font-family: "PT Sans", sans-serif;
+      }
+    </style>
+    <script defer src="./ai.js"></script>
+  </head>
+  <body>
+    <div id="gameBoard">
+      <div id="position">
+        X position: <br />
+        Y position:
+      </div>
+      <canvas width="600" height="600" id="board" class="board"> </canvas>
+    </div>
+
+    <form id="chatbox">
+      <input type="text" id="msg-input" />
+      <button type="submit" id="msg-button" class="btn btn-dark">Send</button>
+      <div
+        id="msg-container"
+        class="overflow-auto shadow p-3 mb-5 bg-white rounded text-left"
+      ></div>
+    </form>
+  </body>
+</html>
