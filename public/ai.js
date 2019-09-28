@@ -13,7 +13,7 @@ var border_start = 0;
 var boarder_finish = 16;
 var watchingGame = false;
 var resetmessage = "5秒後重設棋盤";
-var restartmsg = "輸方先下";
+var waitingAI = "請等待AI下棋";
 var startMsg = "AI對戰，遊戲開始";
 
 //17 * 17
@@ -99,6 +99,7 @@ board.addEventListener(
         }
       }
     }
+    appendMsg(waitingAI);
     socket.emit("aireq", {
       gameBoard: gameBoard,
       turn: turn
@@ -112,6 +113,37 @@ board.addEventListener(
   },
   false
 );
+socket.on("yourTurn", msg => {
+  appendMsg(msg);
+});
+
+//gamewatch
+socket.on("blackWin", victory => {
+  victorymsg(victory);
+  appendMsg(victory);
+  appendMsg(resetmessage);
+  watchingGame = true;
+  setTimeout(() => {
+    cleanBoard();
+    boardDraw();
+    appendMsg(restartmsg);
+    watchingGame = false;
+  }, 5000);
+});
+
+socket.on("whiteWin", victory => {
+  victorymsg(victory);
+  appendMsg(victory);
+  appendMsg(resetmessage);
+  watchingGame = true;
+  setTimeout(() => {
+    cleanBoard();
+    boardDraw();
+    appendMsg(restartmsg);
+    gameBoard;
+    watchingGame = false;
+  }, 5000);
+});
 
 // Get position
 function getMousePos(canvas, evt) {

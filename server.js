@@ -4,6 +4,7 @@ const app = express();
 const http = require("http");
 const server = http.Server(app);
 const alphabeta = require("./alphabeta");
+const score = require("./Score");
 
 app.set("views", "./views");
 app.set("view engine", "ejs");
@@ -49,6 +50,8 @@ var boolean = true;
 var gameStop = true;
 var waitmessage = "請等待玩家進房";
 var startMsg = "遊戲開始";
+var yourTurn = "你的回合";
+var winScore = 10000;
 
 //socket.io connect
 io.on("connection", socket => {
@@ -228,6 +231,12 @@ io.on("connection", socket => {
     turn = data.turn;
     var count = 0;
 
+    if (score.totalScore(data.gameBoard) > winScore) {
+      socket.emit("blackWin", blackWin);
+    } else if (score.totalScore(data.gameBoard) < -winScore) {
+      socket.emit("whiteWin", whiteWin);
+    }
+
     if (turn === false) {
       if (count < 5) {
         var step = alphabeta.steptackle(
@@ -241,6 +250,7 @@ io.on("connection", socket => {
         console.log(data.gameBoard);
         console.log(step);
         socket.emit("aires", step);
+
         count++;
       } else {
         var step = alphabeta.steptackle(
@@ -254,9 +264,11 @@ io.on("connection", socket => {
         console.log(data.gameBoard);
         console.log(step);
         socket.emit("aires", step);
+
         count++;
       }
     }
+    socket.emit("yourTurn", yourTurn);
   });
 });
 

@@ -3,20 +3,87 @@
   <head>
     <title>線上五子棋</title>
     <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background: #b0e0e6;
+      }
+      #room-form {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+      }
+      #room-container {
+        width: 900px;
+        position: absolute;
+        left: 450px;
+        padding: 0px;
+        margin: 15px;
+        height: 700px;
+        overflow-y: scroll;
+      }
+      table {
+        font-size: 30px;
+        font-family: Microsoft JhengHei;
+      }
+
+      #AIlink a {
+        position: absolute;
+        top: 600px;
+        left: 100px;
+        width: 200px;
+        height: 80px;
+        font-size: 40px;
+        font-family: DFKai-sb;
+      }
+    </style>
     <script defer src="http://localhost:55555/socket.io/socket.io.js"></script>
     <script defer src="./index.js"></script>
   </head>
 
   <body>
     <form id="room-form" method="POST" action="/room">
-      <input type="text" id="room-input" name="room" required />
-      <button id="room-created">New Room</button>
+      <input
+        class="btn btn-light  "
+        type="text"
+        id="room-input"
+        name="room"
+        placeholder="New Room Name......"
+        required
+      />
+      <button class="btn btn-secondary" id="room-created">
+        Create New Room
+      </button>
     </form>
+
+    <div id="AIlink">
+      <a class="btn btn-primary btn-lg btn-dark" href="/ai">AI對戰</a>
+    </div>
+
     <div id="room-container">
-      <% Object.keys(rooms).forEach(room => { %>
-      <div><%= room %></div>
-      <a href="/<%= room %>">Join</a>
-      <% }) %>
+      <table class="table table-hover table-dark">
+        <thead>
+          <tr>
+            <th scope="col">房間名稱</th>
+            <th scope="col">加入</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Object.keys(rooms).forEach(room => { %>
+          <tr>
+            <td><%= room %></td>
+            <td>
+              <a class="btn btn-info btn-lg " href="/<%= room %>">Join</a>
+            </td>
+            <% }) %>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
