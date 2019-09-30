@@ -14,7 +14,9 @@
 
 請先安裝 Node 與 Npm。
 
+```
 \$ npm run dev
+```
 
 預設 Port 為 3000，位於 localhost。
 
