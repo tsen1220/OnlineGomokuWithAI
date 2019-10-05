@@ -14,6 +14,14 @@
 
 請先安裝 Node 與 Npm。
 
+並輸入下面的指令安裝modules。
+
+```
+npm install
+```
+
+啟動伺服器
+
 ```
 $ npm run dev
 ```
