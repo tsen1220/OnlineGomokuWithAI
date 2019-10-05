@@ -65,16 +65,17 @@ socket.on("userjoin", name => {
   appendMsg(`${name} 先攻 為黑方`);
 });
 
-chatbox.addEventListener("submit", evt => {
-  evt.preventDefault();
-  socket.emit("msgSend", {
-    roomName: roomName,
-    userName: userName,
-    msg: msgInput.value
+if (chatbox !== null) {
+  chatbox.addEventListener("submit", evt => {
+    evt.preventDefault();
+    socket.emit("msgSend", {
+      roomName: roomName,
+      userName: userName,
+      msg: msgInput.value
+    });
+    appendMsg("You:" + msgInput.value);
   });
-  appendMsg("You:" + msgInput.value);
-});
-
+}
 socket.on("sendMsg", (name, msg) => {
   appendMsg(name + ":" + msg);
 });
@@ -115,52 +116,53 @@ socket.on("gameCanStart", gameStart => {
 socket.on("watchGame", watch => {
   watchingGame = watch;
 });
+if (board !== null) {
+  board.addEventListener(
+    "click",
+    evt => {
+      if (watchingGame) {
+        return;
+      } else {
+        cv = board;
+        var pos = getMousePos(cv, evt);
+        position.innerHTML = `X position: ${Math.floor(
+          pos.x
+        )} <br/>  Y position: ${Math.floor(pos.y)}`;
 
-board.addEventListener(
-  "click",
-  evt => {
-    if (watchingGame) {
-      return;
-    } else {
-      cv = board;
-      var pos = getMousePos(cv, evt);
-      position.innerHTML = `X position: ${Math.floor(
-        pos.x
-      )} <br/>  Y position: ${Math.floor(pos.y)}`;
-
-      var xpos = Math.round(Math.floor(pos.x) / blank_size);
-      var ypos = Math.round(Math.floor(pos.y) / blank_size);
-      if (
-        xpos != border_start &&
-        ypos != border_start &&
-        xpos != boarder_finish &&
-        ypos != boarder_finish
-      ) {
-        if (gameBoard[ypos][xpos] == 0) {
-          if (turn) {
-            socket.emit("turn", roomName, turn);
-            drawPiece(xpos, ypos, 1);
-            gameBoard[ypos][xpos] = 1;
-            turn = false;
-          } else {
-            socket.emit("turn", roomName, turn);
-            drawPiece(xpos, ypos, 2);
-            gameBoard[ypos][xpos] = 2;
-            turn = true;
+        var xpos = Math.round(Math.floor(pos.x) / blank_size);
+        var ypos = Math.round(Math.floor(pos.y) / blank_size);
+        if (
+          xpos != border_start &&
+          ypos != border_start &&
+          xpos != boarder_finish &&
+          ypos != boarder_finish
+        ) {
+          if (gameBoard[ypos][xpos] == 0) {
+            if (turn) {
+              socket.emit("turn", roomName, turn);
+              drawPiece(xpos, ypos, 1);
+              gameBoard[ypos][xpos] = 1;
+              turn = false;
+            } else {
+              socket.emit("turn", roomName, turn);
+              drawPiece(xpos, ypos, 2);
+              gameBoard[ypos][xpos] = 2;
+              turn = true;
+            }
           }
         }
-      }
 
-      socket.emit("gameBoardposition", {
-        gameBoard: gameBoard,
-        xpos: xpos,
-        ypos: ypos,
-        roomName: roomName
-      });
-    }
-  },
-  false
-);
+        socket.emit("gameBoardposition", {
+          gameBoard: gameBoard,
+          xpos: xpos,
+          ypos: ypos,
+          roomName: roomName
+        });
+      }
+    },
+    false
+  );
+}
 
 //receive game data from server
 socket.on("gameBoardpieces", (data, playerturn) => {
@@ -220,8 +222,9 @@ function getMousePos(canvas, evt) {
     y: evt.clientY - rect.top
   };
 }
-
-window.onload = boardDraw();
+if (board !== null) {
+  window.onload = boardDraw();
+}
 //Game Board
 function boardDraw() {
   var board = document.getElementById("board");
