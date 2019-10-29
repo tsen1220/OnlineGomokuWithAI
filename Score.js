@@ -3,11 +3,11 @@ function Range(i, j) {
 }
 
 function oneScore(board, ypos, xpos, player, player2) {
-  // # 5 500000
-  // # 4 1000
-  // # 3 500
-  // # 2 100
-  // # 1 10
+  // # 5 10000
+  // # 4 80
+  // # 3 30
+  // # 2 5
+  // # 1 0
   var award = [
     0,
     5,
