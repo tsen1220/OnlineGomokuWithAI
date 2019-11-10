@@ -1,4 +1,16 @@
-# 目錄
+# Catalog/目錄
+
+## English
+
+[GettingStarted](#GettingStarted)
+
+[RoomList](#RoomList)
+
+[GameRoom](#GameRoom)
+
+[AI](#AI)
+
+## 中文
 
 [啟動](#啟動)
 
@@ -6,11 +18,143 @@
 
 [棋局房間](#棋局房間)
 
-[AI](#AI)
+[AIGame](#AIGame)
+
+如果你喜歡，請給我一顆星，我會很感謝你。
+
+If you like this, please give me a star. Thank you!!
+
+# GettingStarted
+
+This is online gomoku website. Players can enjoy with others.
+
+Developed by Node/Express.
+
+You need to install modules.
+
+```
+npm install
+```
+
+Run server.
+
+```
+$ npm run dev
+```
+
+# RoomList
+
+Node render the ejs template to show the page with server data.
+
+<img src='https://raw.githubusercontent.com/tsen1220/OnlineGomokuWithAI/master/public/roomintroduction.jpg' alt=''>
+
+## Hint:
+
+```
+1.If the room name already exists, the player will be back to the list of rooms.
+
+2.If the room is full, the player will back to the roomlist page.
+```
+
+# GameRoom
+
+I set the 2d array to save the chess board record.
+
+1 means black. 2 means white.
+
+Canvas displays the piece and board.
+
+```
+
+var gameBoard = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+
+```
+
+Socket.io sent and receives the message about room, username, chess board.
+
+Server listens victory and player leaving condition, if situation occur, Server will send messages to client.
+
+Example socket.io settings:
+
+```
+client:
+
+  socket.on("waiting", waitmessage => {
+    appendMsg(waitmessage);
+  });
+
+server:
+
+ socket.emit("waiting", waitmessage);
+
+```
+
+If player leaves the room, client will send disconnect message to server, then server will response and send messages which client need to execute, like reset board.
+
+If player wins, the situation is like leaving room.
+
+<img src='https://raw.githubusercontent.com/tsen1220/OnlineGomokuWithAI/master/public/gameintroduction.jpg' alt=''>
+
+# AI
+
+I use Minimax and Alpha-Beta to build the tree. Then search to get the maximun and minimun score and
+optimization steps.
+
+```
+
+Score settings:
+  # 5 10000
+  # 4 80
+  # 3 30
+  # 2 5
+  # 1(piece) 0 score
+
+```
+
+```
+Minimax Alpha-Beta conception :
+
+# When alpha>=beta,cut-off the node.
+
+function alphabeta(node, depth, α, β, maximizingPlayer)
+     if depth = 0 or the terminal node
+         return the score calculated from the board
+
+     if maximizingPlayer
+         for child of the all child node
+             α := max(α, alphabeta(child, depth - 1, α, β, FALSE))
+             if β ≤ α
+                 break (* β cut-off *)
+         return α
+
+     else
+         for  child of the all child node
+             β := min(β, alphabeta(child, depth - 1, α, β, TRUE))
+             if β ≤ α
+                 break (* α cut-off *)
+         return β
+
+```
 
 # 啟動
-
----
 
 使用 Node/Express 開發。
 
@@ -33,8 +177,6 @@ $ npm run dev
 # 房間清單列表
 
 在這裡使用 ejs 作為模板 views，ejs 經由 Server 渲染頁面，Server 的相關資訊會影響渲染的相關資料。
-
----
 
 <img src='https://raw.githubusercontent.com/tsen1220/OnlineGomokuWithAI/master/public/roomintroduction.jpg' alt=''>
 
@@ -100,15 +242,9 @@ server:
 
 離開了的玩家會重新等待新玩家的到來。
 
----
-
 <img src='https://raw.githubusercontent.com/tsen1220/OnlineGomokuWithAI/master/public/gameintroduction.jpg' alt=''>
 
-# AI
-
----
-
-在房間清單點擊 AI 對戰即可與其他玩家遊玩。
+# AIGame
 
 AI 是藉由評估函數評估棋盤，使用卷積判斷 AI 適合下的位置，在藉極大-極小搜尋最佳值，Alpha-Beta 剪枝來減去不必要的節點，使用這些演算法，找出適合的位置下棋。
 

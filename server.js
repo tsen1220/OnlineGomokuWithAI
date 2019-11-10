@@ -216,12 +216,14 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     getuserRooms(socket).forEach(room => {
-      socket
-        .to(room)
-        .broadcast.emit(
-          "disconnected",
-          `${rooms[room].users[socket.id]} disconnected`
-        );
+      if (Object.keys(rooms[room].users).length == 2) {
+        socket
+          .to(room)
+          .broadcast.emit(
+            "disconnected",
+            `${rooms[room].users[socket.id]} disconnected`
+          );
+      }
       delete rooms[room].users[socket.id];
     });
   });
