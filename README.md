@@ -44,7 +44,7 @@ $ npm run dev
 
 # RoomList
 
-Node render the ejs template to show the page with server data.
+Node renders the ejs template to show the page with server data.
 
 <img src='https://raw.githubusercontent.com/tsen1220/OnlineGomokuWithAI/master/public/roomintroduction.jpg' alt=''>
 
