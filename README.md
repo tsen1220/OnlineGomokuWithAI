@@ -33,7 +33,7 @@ Developed by Node/Express.
 You need to install modules.
 
 ```
-npm install
+$ npm install
 ```
 
 Run server.
