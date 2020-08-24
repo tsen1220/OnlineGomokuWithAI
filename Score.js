@@ -1,8 +1,10 @@
-function Range(i, j) {
+function Range(i, j) 
+{
   return i >= 0 && i < 17 && j >= 0 && j < 17;
 }
 
-function oneScore(board, ypos, xpos, player, player2) {
+function oneScore(board, ypos, xpos, player, player2) 
+{
   // # 5 10000
   // # 4 80
   // # 3 30
@@ -31,17 +33,22 @@ function oneScore(board, ypos, xpos, player, player2) {
   var award_container = new Array(4);
   var oneScore = 0;
 
-  for (let direction of count_direction) {
+  for (let direction of count_direction) 
+  {
     var tempX = xpos;
     var tempY = ypos;
     var count = 0;
 
-    while (Range(xpos, ypos)) {
-      if (board[ypos][xpos] == player) {
+    while (Range(xpos, ypos)) 
+    {
+      if (board[ypos][xpos] == player) 
+      {
         count += 1;
         xpos += direction[0];
         ypos += direction[1];
-      } else {
+      } 
+      else 
+      {
         xpos = tempX;
         ypos = tempY;
         break;
@@ -50,12 +57,16 @@ function oneScore(board, ypos, xpos, player, player2) {
     count_container.push(count);
     count = 0;
 
-    while (Range(xpos, ypos)) {
-      if (board[ypos][xpos] == player) {
+    while (Range(xpos, ypos)) 
+    {
+      if (board[ypos][xpos] == player) 
+      {
         count += 1;
         xpos += -direction[0];
         ypos += -direction[1];
-      } else {
+      } 
+      else 
+      {
         xpos = tempX;
         ypos = tempY;
         break;
@@ -65,18 +76,24 @@ function oneScore(board, ypos, xpos, player, player2) {
     count = 0;
   }
 
-  for (let [i, countcontainer] of count_container.entries()) {
+  for (let [i, countcontainer] of count_container.entries()) 
+  {
     count_container[i] = countcontainer - 1;
   }
 
-  for (let i = 0; i < award_container.length; i++) {
+  for (let i = 0; i < award_container.length; i++) 
+  {
     award_container[i] = count_container[2 * i] + count_container[2 * i + 1];
   }
 
-  for (let [i, awarding] of award_container.entries()) {
-    if (awarding < 0) {
+  for (let [i, awarding] of award_container.entries()) 
+  {
+    if (awarding < 0) 
+    {
       award_container[i] = 0;
-    } else {
+    } 
+    else 
+    {
       award_container[i] = award[awarding];
     }
   }
@@ -88,10 +105,13 @@ function oneScore(board, ypos, xpos, player, player2) {
   return oneScore;
 }
 
-function boardScore(board, player) {
+function boardScore(board, player) 
+{
   Sum = 0;
-  for (let i = 0; i < 17; i++) {
-    for (let j = 0; j < 17; j++) {
+  for (let i = 0; i < 17; i++) 
+  {
+    for (let j = 0; j < 17; j++) 
+    {
       Sum += oneScore(board, j, i, player);
     }
   }
@@ -99,7 +119,8 @@ function boardScore(board, player) {
   return Sum;
 }
 
-function totalScore(board) {
+function totalScore(board) 
+{
   return boardScore(board, 1) - boardScore(board, 2);
 }
 

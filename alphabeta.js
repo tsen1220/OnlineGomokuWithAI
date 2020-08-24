@@ -43,8 +43,10 @@ var arr = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
-function minimax(board, convolveBoard, alpha, beta, depth, player) {
-  if (depth == 0) {
+function minimax(board, convolveBoard, alpha, beta, depth, player) 
+{
+  if (depth == 0) 
+  {
     return [Score.totalScore(board), []];
   }
   const tempBoard = copy(board);
@@ -54,9 +56,12 @@ function minimax(board, convolveBoard, alpha, beta, depth, player) {
   var childList = [];
   var stepList = [];
 
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board.length; j++) {
-      if (conBoard[i][j] == 1 && i !== 0 && j !== 0 && i !== 16 && j !== 16) {
+  for (let i = 0; i < board.length; i++) 
+  {
+    for (let j = 0; j < board.length; j++) 
+    {
+      if (conBoard[i][j] == 1 && i !== 0 && j !== 0 && i !== 16 && j !== 16) 
+      {
         var ttp = copy(tempBoard);
         ttp[i][j] = player;
         childList.push(copy(ttp));
@@ -65,38 +70,47 @@ function minimax(board, convolveBoard, alpha, beta, depth, player) {
     }
   }
 
-  if (player == 1) {
+  if (player == 1) 
+  {
     var bestValue = -Infinity;
     var bestSteps = [];
 
-    for (let [i, child] of childList.entries()) {
+    for (let [i, child] of childList.entries()) 
+    {
       var vals = minimax(child, convolveBoard, alpha, beta, depth - 1, 2);
 
       // var bestTest = Math.max(vals[0], bestValue);
 
-      if (vals[0] > bestValue) {
+      if (vals[0] > bestValue) 
+      {
         bestValue = vals[0];
         bestSteps = stepList.slice(i, i + 1) + ";" + vals[1];
         alpha = Math.max(alpha, vals[0]);
-        if (alpha >= beta) {
+        if (alpha >= beta) 
+        {
           break;
         }
       }
     }
 
     return [bestValue, bestSteps];
-  } else {
+  } 
+  else 
+  {
     var bestValue = Infinity;
     var bestSteps = [];
-    for (let [i, child] of childList.entries()) {
+    for (let [i, child] of childList.entries()) 
+    {
       var vals = minimax(child, convolveBoard, alpha, beta, depth - 1, 1);
       // var bestTest = Math.min(vals[0], bestValue);
 
-      if (vals[0] < bestValue) {
+      if (vals[0] < bestValue) 
+      {
         bestValue = vals[0];
         bestSteps = stepList.slice(i, i + 1) + ";" + vals[1];
         beta = Math.min(beta, vals[0]);
-        if (alpha >= beta) {
+        if (alpha >= beta) 
+        {
           break;
         }
       }
@@ -105,15 +119,16 @@ function minimax(board, convolveBoard, alpha, beta, depth, player) {
   }
 }
 
-function steptackle(board, convolveBoard, alpha, beta, depth, player) {
-  var str = minimax(board, convolveBoard, alpha, beta, depth, player)[1].split(
-    ";"
-  );
+function steptackle(board, convolveBoard, alpha, beta, depth, player) 
+{
+  var str = minimax(board, convolveBoard, alpha, beta, depth, player)[1].split(";");
   str.pop();
   var container = [];
-  for (let [i, st] of str.entries()) {
+  for (let [i, st] of str.entries()) 
+  {
     var crash = st.split(",");
-    for (let [j, s] of crash.entries()) {
+    for (let [j, s] of crash.entries()) 
+    {
       crash[j] = parseInt(crash[j]);
     }
     container.push(crash);
@@ -123,9 +138,11 @@ function steptackle(board, convolveBoard, alpha, beta, depth, player) {
 }
 
 //二維list copy
-function copy(Arr) {
+function copy(Arr) 
+{
   var list = [];
-  for (let a of Arr) {
+  for (let a of Arr) 
+  {
     list.push(a.slice());
   }
   return list;

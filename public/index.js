@@ -41,18 +41,22 @@ var gameBoard = [
 const chatbox = document.getElementById("chatbox");
 const msgInput = document.getElementById("msg-input");
 const msgContainer = document.getElementById("msg-container");
-if (chatbox !== null) {
+if (chatbox !== null) 
+{
   var userName = prompt("Who are you?");
 
-  while (!userName || userName == "null" || userName == "undefined") {
+  while (!userName || userName == "null" || userName == "undefined") 
+  {
     userName = prompt("This name is invalid. Please Input again! ");
   }
   socket.emit("Newuser", { roomName: roomName, userName: userName });
 
   appendMsg(`You joined`);
+
   socket.on("waiting", waitmessage => {
     appendMsg(waitmessage);
   });
+
   socket.on("startMsg", msg => {
     appendMsg(msg);
     appendMsg("You 先攻 為黑方");
@@ -65,7 +69,8 @@ socket.on("userjoin", name => {
   appendMsg(`${name} 先攻 為黑方`);
 });
 
-if (chatbox !== null) {
+if (chatbox !== null) 
+{
   chatbox.addEventListener("submit", evt => {
     evt.preventDefault();
     socket.emit("msgSend", {
@@ -76,6 +81,7 @@ if (chatbox !== null) {
     appendMsg("You:" + msgInput.value);
   });
 }
+
 socket.on("sendMsg", (name, msg) => {
   appendMsg(name + ":" + msg);
 });
@@ -96,7 +102,8 @@ socket.on("disconnected", msg => {
   }, 5000);
 });
 
-function appendMsg(message) {
+function appendMsg(message) 
+{
   var div = document.createElement("div");
   div.width = "300px";
   div.overflow = "hidden";
@@ -116,34 +123,36 @@ socket.on("gameCanStart", gameStart => {
 socket.on("watchGame", watch => {
   watchingGame = watch;
 });
-if (board !== null) {
+if (board !== null) 
+{
   board.addEventListener(
     "click",
     evt => {
-      if (watchingGame) {
+      if (watchingGame) 
+      {
         return;
-      } else {
+      } 
+      else 
+      {
         cv = board;
         var pos = getMousePos(cv, evt);
-        position.innerHTML = `X position: ${Math.floor(
-          pos.x
-        )} <br/>  Y position: ${Math.floor(pos.y)}`;
+        position.innerHTML = `X position: ${Math.floor(pos.x)} <br/>  Y position: ${Math.floor(pos.y)}`;
 
         var xpos = Math.round(Math.floor(pos.x) / blank_size);
         var ypos = Math.round(Math.floor(pos.y) / blank_size);
-        if (
-          xpos != border_start &&
-          ypos != border_start &&
-          xpos != boarder_finish &&
-          ypos != boarder_finish
-        ) {
-          if (gameBoard[ypos][xpos] == 0) {
-            if (turn) {
+        if (xpos != border_start && ypos != border_start && xpos != boarder_finish && ypos != boarder_finish) 
+        {
+          if (gameBoard[ypos][xpos] == 0) 
+          {
+            if (turn) 
+            {
               socket.emit("turn", roomName, turn);
               drawPiece(xpos, ypos, 1);
               gameBoard[ypos][xpos] = 1;
               turn = false;
-            } else {
+            } 
+            else 
+            {
               socket.emit("turn", roomName, turn);
               drawPiece(xpos, ypos, 2);
               gameBoard[ypos][xpos] = 2;
@@ -167,19 +176,20 @@ if (board !== null) {
 //receive game data from server
 socket.on("gameBoardpieces", (data, playerturn) => {
   gameBoard = data.gameBoard;
-  if (
-    data.xpos != border_start &&
-    data.ypos != border_start &&
-    data.xpos != boarder_finish &&
-    data.ypos != boarder_finish
-  ) {
-    if (gameBoard[data.ypos][data.xpos] == 1) {
-      if (playerturn == true) {
+  if (data.xpos != border_start && data.ypos != border_start && data.xpos != boarder_finish && data.ypos != boarder_finish) 
+  {
+    if (gameBoard[data.ypos][data.xpos] == 1) 
+    {
+      if (playerturn == true) 
+      {
         drawPiece(data.xpos, data.ypos, 1);
         turn = false;
       }
-    } else if (gameBoard[data.ypos][data.xpos] == 2) {
-      if (playerturn == false) {
+    } 
+    else if (gameBoard[data.ypos][data.xpos] == 2) 
+    {
+      if (playerturn == false) 
+      {
         drawPiece(data.xpos, data.ypos, 2);
         turn = true;
       }
@@ -215,23 +225,27 @@ socket.on("whitewin", (victory, gameControll) => {
 });
 
 // Get position
-function getMousePos(canvas, evt) {
+function getMousePos(canvas, evt) 
+{
   var rect = canvas.getBoundingClientRect();
   return {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top
   };
 }
-if (board !== null) {
+if (board !== null) 
+{
   window.onload = boardDraw();
 }
 //Game Board
-function boardDraw() {
+function boardDraw() 
+{
   var board = document.getElementById("board");
   var ctx = board.getContext("2d"); //Canvas Context Object
 
   ctx.beginPath();
-  for (let i = 1; i <= blank_length; i++) {
+  for (let i = 1; i <= blank_length; i++) 
+  {
     ctx.moveTo(blank_size * i, board_size_start);
     ctx.lineTo(blank_size * i, board_size_finish);
 
@@ -242,7 +256,8 @@ function boardDraw() {
   ctx.stroke();
 }
 // click and draw piece
-function drawPiece(cx, cy, piece) {
+function drawPiece(cx, cy, piece) 
+{
   var board = document.getElementById("board");
   var ctx = board.getContext("2d");
   if (piece == 1) {
@@ -256,7 +271,8 @@ function drawPiece(cx, cy, piece) {
   ctx.fill();
 }
 
-function victorymsg(msg) {
+function victorymsg(msg) 
+{
   var c = document.getElementById("board");
   var ctx = c.getContext("2d");
 
@@ -271,7 +287,8 @@ function victorymsg(msg) {
   ctx.fillText(msg, 50, 300);
 }
 
-function cleanBoard() {
+function cleanBoard() 
+{
   //盤重畫
   var board = document.getElementById("board");
   var ctx = board.getContext("2d");

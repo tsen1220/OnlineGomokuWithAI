@@ -22,23 +22,30 @@ app.get("/ai", (req, res) => {
 });
 
 app.post("/room", (req, res) => {
-  if (rooms[req.body.room] == null) {
+  if (rooms[req.body.room] == null) 
+  {
     rooms[req.body.room] = { users: {} };
     res.redirect(req.body.room);
-  } else {
+  } 
+  else 
+  {
     res.redirect("/");
   }
 });
 
 app.get("/:room", (req, res) => {
-  if (rooms[req.params.room] == null) {
+  if (rooms[req.params.room] == null) 
+  {
     res.redirect("/");
-  } else {
+  } 
+  else 
+  {
     res.render("index", { roomName: req.params.room });
   }
 });
 
 server.listen(3000);
+
 //遊戲參數
 var turn = false;
 var gameboard = [];
@@ -73,26 +80,19 @@ io.on("connection", socket => {
     socket.to(data.roomName).broadcast.emit("gameBoardpieces", data, turn);
 
     //橫
-    for (let i = 0; i < 5; i++) {
-      if (xpos + i - 4 >= 0) {
-        if (
-          gameboard[ypos][xpos + i - 4] == 1 &&
-          gameboard[ypos][xpos + i - 3] == 1 &&
-          gameboard[ypos][xpos + i - 2] == 1 &&
-          gameboard[ypos][xpos + i - 1] == 1 &&
-          gameboard[ypos][xpos + i] == 1
-        ) {
+    for (let i = 0; i < 5; i++) 
+    {
+      if (xpos + i - 4 >= 0) 
+      {
+        if (gameboard[ypos][xpos + i - 4] == 1 && gameboard[ypos][xpos + i - 3] == 1 && gameboard[ypos][xpos + i - 2] == 1 && gameboard[ypos][xpos + i - 1] == 1 && gameboard[ypos][xpos + i] == 1) 
+        {
           socket.emit("blackwin", blackWin, boolean);
           socket
             .to(data.roomName)
             .broadcast.emit("blackwin", blackWin, !boolean);
-        } else if (
-          gameboard[ypos][xpos + i - 4] == 2 &&
-          gameboard[ypos][xpos + i - 3] == 2 &&
-          gameboard[ypos][xpos + i - 2] == 2 &&
-          gameboard[ypos][xpos + i - 1] == 2 &&
-          gameboard[ypos][xpos + i] == 2
-        ) {
+        } 
+        else if (gameboard[ypos][xpos + i - 4] == 2 && gameboard[ypos][xpos + i - 3] == 2 && gameboard[ypos][xpos + i - 2] == 2 && gameboard[ypos][xpos + i - 1] == 2 && gameboard[ypos][xpos + i] == 2) 
+        {
           socket.emit("whitewin", whiteWin, boolean);
           socket
             .to(data.roomName)
@@ -102,16 +102,11 @@ io.on("connection", socket => {
     }
 
     // 直
-
-    for (let i = 0; i < 5; i++) {
-      if (ypos + i - 4 >= 0) {
-        if (
-          gameboard[ypos + i - 4][xpos] == 1 &&
-          gameboard[ypos + i - 3][xpos] == 1 &&
-          gameboard[ypos + i - 2][xpos] == 1 &&
-          gameboard[ypos + i - 1][xpos] == 1 &&
-          gameboard[ypos + i][xpos] == 1
-        ) {
+    for (let i = 0; i < 5; i++) 
+    {
+      if (ypos + i - 4 >= 0) 
+      {
+        if (gameboard[ypos + i - 4][xpos] == 1 && gameboard[ypos + i - 3][xpos] == 1 && gameboard[ypos + i - 2][xpos] == 1 && gameboard[ypos + i - 1][xpos] == 1 && gameboard[ypos + i][xpos] == 1) {
           socket.emit("blackwin", blackWin, boolean);
           socket
             .to(data.roomName)
@@ -132,26 +127,19 @@ io.on("connection", socket => {
     }
 
     //負斜率
-    for (let i = 0; i < 5; i++) {
-      if (ypos + i - 4 >= 0 && xpos + i - 4 >= 0) {
-        if (
-          gameboard[ypos + i - 4][xpos + i - 4] == 1 &&
-          gameboard[ypos + i - 3][xpos + i - 3] == 1 &&
-          gameboard[ypos + i - 2][xpos + i - 2] == 1 &&
-          gameboard[ypos + i - 1][xpos + i - 1] == 1 &&
-          gameboard[ypos + i][xpos + i] == 1
-        ) {
+    for (let i = 0; i < 5; i++) 
+    {
+      if (ypos + i - 4 >= 0 && xpos + i - 4 >= 0) 
+      {
+        if (gameboard[ypos + i - 4][xpos + i - 4] == 1 && gameboard[ypos + i - 3][xpos + i - 3] == 1 && gameboard[ypos + i - 2][xpos + i - 2] == 1 && gameboard[ypos + i - 1][xpos + i - 1] == 1 && gameboard[ypos + i][xpos + i] == 1) 
+        {
           socket.emit("blackwin", blackWin, boolean);
           socket
             .to(data.roomName)
             .broadcast.emit("blackwin", blackWin, !boolean);
-        } else if (
-          gameboard[ypos + i - 4][xpos + i - 4] == 2 &&
-          gameboard[ypos + i - 3][xpos + i - 3] == 2 &&
-          gameboard[ypos + i - 2][xpos + i - 2] == 2 &&
-          gameboard[ypos + i - 1][xpos + i - 1] == 2 &&
-          gameboard[ypos + i][xpos + i] == 2
-        ) {
+        } 
+        else if (gameboard[ypos + i - 4][xpos + i - 4] == 2 && gameboard[ypos + i - 3][xpos + i - 3] == 2 && gameboard[ypos + i - 2][xpos + i - 2] == 2 && gameboard[ypos + i - 1][xpos + i - 1] == 2 && gameboard[ypos + i][xpos + i] == 2) 
+        {
           socket.emit("whitewin", whiteWin, boolean);
           socket
             .to(data.roomName)
@@ -161,31 +149,19 @@ io.on("connection", socket => {
     }
 
     //正斜率
-    for (let i = 0; i < 5; i++) {
-      if (
-        ypos - i + 4 >= 0 &&
-        xpos + i - 4 >= 0 &&
-        ypos - i + 4 < gameboard.length &&
-        xpos + i - 4 < gameboard.length
-      ) {
-        if (
-          gameboard[ypos - i + 4][xpos + i - 4] == 1 &&
-          gameboard[ypos - i + 3][xpos + i - 3] == 1 &&
-          gameboard[ypos - i + 2][xpos + i - 2] == 1 &&
-          gameboard[ypos - i + 1][xpos + i - 1] == 1 &&
-          gameboard[ypos - i][xpos + i] == 1
-        ) {
+    for (let i = 0; i < 5; i++) 
+    {
+      if (ypos - i + 4 >= 0 && xpos + i - 4 >= 0 && ypos - i + 4 < gameboard.length && xpos + i - 4 < gameboard.length) 
+      {
+        if (gameboard[ypos - i + 4][xpos + i - 4] == 1 && gameboard[ypos - i + 3][xpos + i - 3] == 1 && gameboard[ypos - i + 2][xpos + i - 2] == 1 && gameboard[ypos - i + 1][xpos + i - 1] == 1 && gameboard[ypos - i][xpos + i] == 1) 
+        {
           socket.emit("blackwin", blackWin, boolean);
           socket
             .to(data.roomName)
             .broadcast.emit("blackwin", blackWin, !boolean);
-        } else if (
-          gameboard[ypos - i + 4][xpos + i - 4] == 2 &&
-          gameboard[ypos - i + 3][xpos + i - 3] == 2 &&
-          gameboard[ypos - i + 2][xpos + i - 2] == 2 &&
-          gameboard[ypos - i + 1][xpos + i - 1] == 2 &&
-          gameboard[ypos - i][xpos + i] == 2
-        ) {
+        } 
+        else if (gameboard[ypos - i + 4][xpos + i - 4] == 2 && gameboard[ypos - i + 3][xpos + i - 3] == 2 && gameboard[ypos - i + 2][xpos + i - 2] == 2 && gameboard[ypos - i + 1][xpos + i - 1] == 2 && gameboard[ypos - i][xpos + i] == 2) 
+        {
           socket.emit("whitewin", whiteWin, boolean);
           socket
             .to(data.roomName)
@@ -194,6 +170,7 @@ io.on("connection", socket => {
       }
     }
   });
+
   socket.on("msgSend", obj => {
     socket.to(obj.roomName).broadcast.emit("sendMsg", obj.userName, obj.msg);
   });
@@ -202,21 +179,25 @@ io.on("connection", socket => {
     socket.join(obj.roomName);
     rooms[obj.roomName].users[socket.id] = obj.roomName;
     socket.to(obj.roomName).broadcast.emit("userjoin", obj.userName);
-    if (Object.keys(rooms[obj.roomName].users).length == 1) {
+    if (Object.keys(rooms[obj.roomName].users).length == 1) 
+    {
       socket.emit("waiting", waitmessage);
     }
-    if (Object.keys(rooms[obj.roomName].users).length == 2) {
+    if (Object.keys(rooms[obj.roomName].users).length == 2) 
+    {
       socket.emit("startMsg", startMsg);
       socket.emit("gameCanStart", !gameStop);
     }
-    if (Object.keys(rooms[obj.roomName].users).length > 2) {
+    if (Object.keys(rooms[obj.roomName].users).length > 2) 
+    {
       socket.emit("fullroom", "/");
     }
   });
 
   socket.on("disconnect", () => {
     getuserRooms(socket).forEach(room => {
-      if (Object.keys(rooms[room].users).length == 2) {
+      if (Object.keys(rooms[room].users).length == 2) 
+      {
         socket
           .to(room)
           .broadcast.emit(
@@ -233,36 +214,29 @@ io.on("connection", socket => {
     turn = data.turn;
     var count = 0;
 
-    if (score.totalScore(data.gameBoard) > winScore) {
+    if (score.totalScore(data.gameBoard) > winScore) 
+    {
       socket.emit("blackWin", blackWin);
-    } else if (score.totalScore(data.gameBoard) < -winScore) {
+    } 
+    else if (score.totalScore(data.gameBoard) < -winScore) 
+    {
       socket.emit("whiteWin", whiteWin);
     }
 
-    if (turn === false) {
-      if (count < 5) {
-        var step = alphabeta.steptackle(
-          data.gameBoard,
-          alphabeta.filter,
-          -Infinity,
-          Infinity,
-          2,
-          2
-        )[1];
+    if (turn === false) 
+    {
+      if (count < 5) 
+      {
+        var step = alphabeta.steptackle(data.gameBoard, alphabeta.filter, -Infinity, Infinity, 2, 2)[1];
         console.log(data.gameBoard);
         console.log(step);
         socket.emit("aires", step);
 
         count++;
-      } else {
-        var step = alphabeta.steptackle(
-          data.gameBoard,
-          alphabeta.filter,
-          -Infinity,
-          Infinity,
-          2,
-          2
-        )[0];
+      }
+      else 
+      {
+        var step = alphabeta.steptackle(data.gameBoard, alphabeta.filter, -Infinity, Infinity, 2, 2)[0];
         console.log(data.gameBoard);
         console.log(step);
         socket.emit("aires", step);
@@ -274,9 +248,11 @@ io.on("connection", socket => {
   });
 });
 
-function getuserRooms(socket) {
+function getuserRooms(socket) 
+{
   return Object.entries(rooms).reduce((names, [name, room]) => {
-    if (room.users[socket.id] != null) {
+    if (room.users[socket.id] != null) 
+    {
       names.push(name);
     }
     return names;

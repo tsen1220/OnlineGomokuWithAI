@@ -50,7 +50,8 @@ chatbox.addEventListener("submit", evt => {
   appendMsg("You:" + msgInput.value);
 });
 
-function appendMsg(message) {
+function appendMsg(message) 
+{
   var div = document.createElement("div");
   div.width = "300px";
   div.overflow = "hidden";
@@ -63,34 +64,32 @@ function appendMsg(message) {
 //click to trigger event
 
 //賽局控制
-
-board.addEventListener(
-  "click",
-  evt => {
-    if (watchingGame) {
+board.addEventListener("click", evt => {
+    if (watchingGame) 
+    {
       return;
-    } else {
+    } 
+    else 
+    {
       cv = board;
       var pos = getMousePos(cv, evt);
-      position.innerHTML = `X position: ${Math.floor(
-        pos.x
-      )} <br/>  Y position: ${Math.floor(pos.y)}`;
+      position.innerHTML = `X position: ${Math.floor(pos.x)} <br/>  Y position: ${Math.floor(pos.y)}`;
 
       var xpos = Math.round(Math.floor(pos.x) / blank_size);
       var ypos = Math.round(Math.floor(pos.y) / blank_size);
-      if (
-        xpos != border_start &&
-        ypos != border_start &&
-        xpos != boarder_finish &&
-        ypos != boarder_finish
-      ) {
-        if (gameBoard[ypos][xpos] == 0) {
-          if (turn) {
+      if (xpos != border_start && ypos != border_start && xpos != boarder_finish && ypos != boarder_finish) 
+      {
+        if (gameBoard[ypos][xpos] == 0) 
+        {
+          if (turn) 
+          {
             drawPiece(xpos, ypos, 1);
             gameBoard[ypos][xpos] = 1;
             turn = false;
             watchingGame = true;
-          } else {
+          } 
+          else 
+          {
             drawPiece(ypos, xpos, 2);
             gameBoard[ypos][xpos] = 2;
             turn = true;
@@ -99,11 +98,14 @@ board.addEventListener(
         }
       }
     }
+
     appendMsg(waitingAI);
+
     socket.emit("aireq", {
       gameBoard: gameBoard,
       turn: turn
     });
+
     socket.on("aires", data => {
       drawPiece(data[1], data[0], 2);
       gameBoard[data[0]][data[1]] = 2;
@@ -113,6 +115,7 @@ board.addEventListener(
   },
   false
 );
+
 socket.on("yourTurn", msg => {
   appendMsg(msg);
 });
@@ -146,7 +149,8 @@ socket.on("whiteWin", victory => {
 });
 
 // Get position
-function getMousePos(canvas, evt) {
+function getMousePos(canvas, evt) 
+{
   var rect = canvas.getBoundingClientRect();
   return {
     x: evt.clientX - rect.left,
@@ -156,12 +160,14 @@ function getMousePos(canvas, evt) {
 
 window.onload = boardDraw();
 //Game Board
-function boardDraw() {
+function boardDraw() 
+{
   var board = document.getElementById("board");
   var ctx = board.getContext("2d"); //Canvas Context Object
 
   ctx.beginPath();
-  for (let i = 1; i <= blank_length; i++) {
+  for (let i = 1; i <= blank_length; i++) 
+  {
     ctx.moveTo(blank_size * i, board_size_start);
     ctx.lineTo(blank_size * i, board_size_finish);
 
@@ -172,12 +178,16 @@ function boardDraw() {
   ctx.stroke();
 }
 // click and draw piece
-function drawPiece(cx, cy, piece) {
+function drawPiece(cx, cy, piece) 
+{
   var board = document.getElementById("board");
   var ctx = board.getContext("2d");
-  if (piece == 1) {
+  if (piece == 1) 
+  {
     ctx.fillStyle = "black";
-  } else if (piece == 2) {
+  } 
+  else if (piece == 2) 
+  {
     ctx.fillStyle = "white";
   }
   ctx.beginPath();
@@ -186,7 +196,8 @@ function drawPiece(cx, cy, piece) {
   ctx.fill();
 }
 
-function victorymsg(msg) {
+function victorymsg(msg) 
+{
   var c = document.getElementById("board");
   var ctx = c.getContext("2d");
 
@@ -201,14 +212,17 @@ function victorymsg(msg) {
   ctx.fillText(msg, 50, 300);
 }
 
-function cleanBoard() {
+function cleanBoard() 
+{
   //盤重畫
   var board = document.getElementById("board");
   var ctx = board.getContext("2d");
   board.height = board.height;
   //盤重設
-  for (let i = 0; i < 17; i++) {
-    for (let j = 0; j < 17; j++) {
+  for (let i = 0; i < 17; i++) 
+  {
+    for (let j = 0; j < 17; j++) 
+    {
       gameBoard[i][j] = 0;
     }
   }
