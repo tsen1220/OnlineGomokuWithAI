@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <meta charset="utf-8" />
+
   <head>
     <title>線上五子棋</title>
     <link
@@ -11,9 +12,11 @@
     />
     <style>
       @import url("https://fonts.googleapis.com/css?family=PT+Sans&display=swap");
+
       body {
         background: #b0e0e6;
       }
+
       #gameBoard {
         border: 1px solid #000000;
         background: rgb(240, 176, 96);
@@ -37,6 +40,7 @@
         left: 130px;
         top: 30px;
       }
+
       #chatbox {
         position: absolute;
         display: block;
@@ -45,17 +49,20 @@
         border-radius: 3px;
         width: 400px;
       }
+
       #msg-input {
         position: absolute;
         bottom: 8px;
         left: 3px;
         width: 320px;
       }
+
       #msg-button {
         position: absolute;
         bottom: 4px;
         right: 1px;
       }
+
       #msg-container {
         width: 380px;
         height: 650px;
@@ -70,6 +77,7 @@
     <script defer src="http://localhost:55555/socket.io/socket.io.js"></script>
     <script defer src="./index.js"></script>
   </head>
+
   <body>
     <div id="gameBoard">
       <div id="position">
@@ -88,4 +96,5 @@
       ></div>
     </form>
   </body>
+  
 </html>
